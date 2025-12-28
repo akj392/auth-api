@@ -28,16 +28,6 @@ pipeline {
             }
         }
 
-        stage('Restart pm2') {
-            steps {
-                sh '''
-                export NODE_ENV=production
-                pm2 restart auth-api --update-env || pm2 start server.js --name auth-api
-                sudo systemctl reload nginx
-                '''
-            }
-        }
-
         stage('Reload Nginx') {
             steps {
                 sh '''
