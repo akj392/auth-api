@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const bcrypt = require("bcryptjs");
+const uuid = require('uuid');
 const authenticate = require('../middlewares/auth.middleware')
 const { generateAccessToken, generateRefreshToken } = require('../helpers/tokenHelper');
 const users = [];
@@ -55,7 +56,7 @@ router.post("/signup", async (req, res) => {
 
     // 4️⃣ Save user
     const newUser = {
-        id: Date.now(),
+        id: uuid.v4(),
         email,
         password: hashedPassword,
     };
