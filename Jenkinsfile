@@ -24,6 +24,8 @@ pipeline {
                 sh '''
                 rm -rf /var/www/auth-api/*
                 cp -r * /var/www/auth-api/
+                export NODE_ENV=production
+                pm2 restart auth-api --update-env || pm2 start server.js --name auth-api
                 sudo systemctl reload nginx
                 '''
             }
