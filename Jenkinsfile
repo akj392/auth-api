@@ -28,6 +28,20 @@ pipeline {
             }
         }
 
+        stage('Restart API') {
+            steps {
+                sh '''
+                cd /var/www/auth-api
+
+                sudo -u deploy pm2 restart auth-api --update-env || \
+                sudo -u deploy pm2 start server.js --name auth-api --env production
+
+                sudo -u deploy pm2 save
+                sudo systemctl reload nginx
+                '''
+            }
+        }
+
         stage('Reload Nginx') {
             steps {
                 sh '''
