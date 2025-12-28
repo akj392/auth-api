@@ -67,6 +67,7 @@ pipeline {
 
     post {
         success {
+            cleanWs()
             echo '✅ Auth api deployed successfully.'
         }
         failure {
