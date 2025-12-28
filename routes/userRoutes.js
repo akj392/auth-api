@@ -40,24 +40,20 @@ router.post("/login", async (req, res) => {
 router.post("/signup", async (req, res) => {
     const { email, password } = req.body;
 
-    // 1️⃣ Validate input
     if (!email || !password) {
         return res.status(400).json({ message: "Email and password required" });
     }
 
-    // 2️⃣ Check if user exists
     const existingUser = users.find((u) => u.email === email);
     if (existingUser) {
         return res.status(409).json({ message: "User already exists" });
     }
 
-    // 3️⃣ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 4️⃣ Save user
     const newUser = {
+        ...req.body,
         id: uuid.v4(),
-        email,
         password: hashedPassword,
     };
     users.push(newUser);
@@ -69,11 +65,10 @@ router.post("/signup", async (req, res) => {
 
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: false, // true in prod
+        secure: process.env.SECURE_FLAG,
         sameSite: "lax",
     });
 
-    // 7️⃣ Send access token
     res.status(201).json({
         message: "Signup successful",
         accessToken,
