@@ -37,6 +37,19 @@ pipeline {
                 sudo -u deploy pm2 start server.js --name auth-api --env production
 
                 sudo -u deploy pm2 save
+                '''
+            }
+        }
+
+        stage('Deploy Nginx Config') {
+            steps {
+                sh '''
+                sudo cp nginx.conf /etc/nginx/sites-available/auth-api
+                sudo ln -sf /etc/nginx/sites-available/auth-api /etc/nginx/sites-enabled/auth-api
+
+                sudo rm -f /etc/nginx/sites-enabled/default
+
+                sudo nginx -t
                 sudo systemctl reload nginx
                 '''
             }

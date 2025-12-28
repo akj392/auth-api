@@ -27,7 +27,13 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use('/api/auth', userRoutes);
+app.use('/test',(req, res) => {
+    res.status(200).json({
+        status: 'test completed'
+    });
+})
+
+app.use('/auth', userRoutes);
 
 server.listen(PORT, () => {
     console.log(`server is running at PORT: ${PORT}`);
