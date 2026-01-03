@@ -70,7 +70,7 @@ router.post("/signup", async (req, res) => {
     });
 
     res.status(201).json({
-        message: "Signup successful",
+        message: "Signup successful!",
         accessToken,
     });
 });
