@@ -2,7 +2,7 @@ const router = require('express').Router();
 const bcrypt = require("bcryptjs");
 const uuid = require('uuid');
 const authenticate = require('../middlewares/auth.middleware')
-const { generateAccessToken, generateRefreshToken } = require('../helpers/tokenHelper');
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../helpers/tokenHelper');
 const users = [];
 
 router.get('/all', (req, res) => {
@@ -73,6 +73,33 @@ router.post("/signup", async (req, res) => {
         message: "Signup successful!",
         accessToken,
     });
+});
+
+router.post("/refresh", (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+        return res.sendStatus(401);
+    }
+
+    try {
+        const decoded = verifyRefreshToken(refreshToken);
+
+        const payload = { id: decoded.id, email: decoded.email };
+
+        const newAccessToken = generateAccessToken(payload);
+        const newRefreshToken = generateRefreshToken(payload);
+
+        res.cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax",
+        });
+
+        return res.json({ accessToken: newAccessToken });
+    } catch (err) {
+        return res.sendStatus(403);
+    }
 });
 
 router.post("/logout", (req, res) => {

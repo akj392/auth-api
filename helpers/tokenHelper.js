@@ -6,4 +6,7 @@ const generateAccessToken = (user) =>
 const generateRefreshToken = (user) =>
     jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "7d" });
 
-module.exports = { generateAccessToken, generateRefreshToken }
+const verifyRefreshToken = (token) =>
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+
+module.exports = { generateAccessToken, generateRefreshToken, verifyRefreshToken }
