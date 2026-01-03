@@ -71,7 +71,7 @@ pipeline {
             echo '✅ Auth api deployed successfully.'
         }
         failure {
-            echo '❌ Build failed'
+            echo '❌Build failed'
         }
     }
 }
